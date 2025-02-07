@@ -1,7 +1,11 @@
 package com.infrafrontier.programmingChallenge.assignment;
 
 import com.infrafrontier.programmingChallenge.student.Student;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -10,36 +14,37 @@ import java.util.UUID;
 @Table(name = "assignment")
 public class Assignment {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private final UUID id;
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     private String title;
 
     @Column
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "student_id", referencedColumnName = "id", nullable = false)
-    private Student submittedBy;
+    @JoinColumn(name = "submitted_by", referencedColumnName = "id")
+    private Student student;
 
     @Column(nullable = false, updatable = false)
-    private final LocalDateTime submittedAt;
+    private LocalDateTime submittedAt;
 
-    public Assignment(String title, Student student){
-        this.id = UUID.randomUUID();
+    public Assignment(){}
+
+    public Assignment(String title, @Nullable Student student, @Nullable String description){
         this.title = title;
-        this.submittedBy = student;
+        if(description != null){
+            this.description = description;
+        }
+        if(student != null){
+            this.student = student;
+        }
         this.submittedAt = LocalDateTime.now();
     }
 
-    public Assignment(String title, Student student, String description){
-        this(title, student);
-        this.description = description;
-    }
-
-    public UUID getId(){
+    public Long getId(){
         return this.id;
     }
 
@@ -59,12 +64,12 @@ public class Assignment {
         this.description = description;
     }
 
-    public Student getSubmittedBy() {
-        return this.submittedBy;
+    public Student getStudent() {
+        return this.student;
     }
 
-    public void setSubmittedBy(Student submittedBy) {
-        this.submittedBy = submittedBy;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     public LocalDateTime getSubmittedAt(){

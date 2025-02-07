@@ -1,5 +1,6 @@
 package com.infrafrontier.programmingChallenge.student;
 
+import com.infrafrontier.programmingChallenge.exceptions.EntityAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,9 @@ public class StudentService {
      * @return persisted entity
      */
     public Student saveStudent(Student student){
+        if(studentRepository.findByEmail(student.getEmail()).isPresent()){
+            throw new EntityAlreadyExistsException("Student", student.getEmail());
+        }
         return studentRepository.save(student);
     }
 }
