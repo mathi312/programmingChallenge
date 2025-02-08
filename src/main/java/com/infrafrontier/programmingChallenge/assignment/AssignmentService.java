@@ -44,6 +44,10 @@ public class AssignmentService {
         return assignmentRepository.save(newAssignment);
     }
 
+    /**
+     * Gets all Assignments from the database
+     * @return List of Assignments
+     */
     public List<Assignment> findAll(){
         return this.assignmentRepository.findAll();
     }
